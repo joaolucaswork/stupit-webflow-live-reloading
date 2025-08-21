@@ -4,20 +4,20 @@
  * Versão sem imports/exports para uso direto no Webflow
  */
 
-(function() {
-  'use strict';
+(function () {
+  "use strict";
 
   const Utils = {
     formatCurrency(value) {
-      return new Intl.NumberFormat('pt-BR', {
+      return new Intl.NumberFormat("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }).format(value);
     },
 
     parseCurrencyValue(value) {
-      if (!value || typeof value !== 'string') return 0;
-      const cleanValue = value.replace(/[^\d,]/g, '').replace(',', '.');
+      if (!value || typeof value !== "string") return 0;
+      const cleanValue = value.replace(/[^\d,]/g, "").replace(",", ".");
       return parseFloat(cleanValue) || 0;
     },
 
@@ -63,21 +63,25 @@
     setupListeners() {
       if (window.ReinoEventCoordinator) {
         window.ReinoEventCoordinator.registerListener(
-          'patrimony-sync',
-          'input',
+          "patrimony-sync",
+          "input",
           Utils.debounce((e) => {
             const value = Utils.parseCurrencyValue(e.target.value);
             this.handleValueChange(value);
           }, 300)
         );
 
-        window.ReinoEventCoordinator.registerListener('patrimony-sync', 'change', (e) => {
-          const value = Utils.parseCurrencyValue(e.target.value);
-          this.handleValueChange(value);
-        });
+        window.ReinoEventCoordinator.registerListener(
+          "patrimony-sync",
+          "change",
+          (e) => {
+            const value = Utils.parseCurrencyValue(e.target.value);
+            this.handleValueChange(value);
+          }
+        );
       }
 
-      this.input.addEventListener('currencyChange', (e) => {
+      this.input.addEventListener("currencyChange", (e) => {
         this.handleValueChange(e.detail.value);
       });
     },
@@ -86,7 +90,7 @@
       PatrimonySync.mainValue = value;
 
       document.dispatchEvent(
-        new CustomEvent('patrimonyMainValueChanged', {
+        new CustomEvent("patrimonyMainValueChanged", {
           detail: {
             value,
             formatted: Utils.formatCurrency(value),
@@ -95,7 +99,7 @@
       );
 
       document.dispatchEvent(
-        new CustomEvent('totalPatrimonyChanged', {
+        new CustomEvent("totalPatrimonyChanged", {
           detail: {
             value,
             formatted: Utils.formatCurrency(value),
@@ -115,7 +119,7 @@
       PatrimonySync.mainValue = value;
       if (this.input) {
         this.input.value = Utils.formatCurrency(value);
-        this.input.dispatchEvent(new Event('input', { bubbles: true }));
+        this.input.dispatchEvent(new Event("input", { bubbles: true }));
       }
     },
   };
@@ -124,21 +128,29 @@
     items: [],
 
     init() {
-      const containers = document.querySelectorAll('.patrimonio_interactive_item');
+      const containers = document.querySelectorAll(
+        ".patrimonio_interactive_item"
+      );
 
       containers.forEach((container, index) => {
-        const activeItem = container.querySelector('.active-produto-item');
-        const disabledItem = container.querySelector('.disabled-produto-item');
+        const activeItem = container.querySelector(".active-produto-item");
+        const disabledItem = container.querySelector(".disabled-produto-item");
 
         if (!activeItem || !disabledItem) return;
 
         const input = activeItem.querySelector('[input-settings="receive"]');
-        const slider = activeItem.querySelector('range-slider');
-        const percentageDisplay = activeItem.querySelector('.porcentagem-calculadora');
+        const slider = activeItem.querySelector("range-slider");
+        const percentageDisplay = activeItem.querySelector(
+          ".porcentagem-calculadora"
+        );
 
-        const valorProduto = disabledItem.querySelector('.valor-produto');
-        const percentageDisabled = disabledItem.querySelector('.porcentagem-calculadora-disabled');
-        const backgroundItemAcao = disabledItem.querySelector('.background-item-acao');
+        const valorProduto = disabledItem.querySelector(".valor-produto");
+        const percentageDisabled = disabledItem.querySelector(
+          ".porcentagem-calculadora-disabled"
+        );
+        const backgroundItemAcao = disabledItem.querySelector(
+          ".background-item-acao"
+        );
 
         if (input && slider) {
           const item = {
@@ -164,28 +176,28 @@
     },
 
     setupItemListeners(item) {
-      item.input.addEventListener('currencyChange', (e) => {
+      item.input.addEventListener("currencyChange", (e) => {
         this.handleInputChange(item, e.detail.value);
       });
 
       item.input.addEventListener(
-        'input',
+        "input",
         Utils.debounce((e) => {
           const value = Utils.parseCurrencyValue(e.target.value);
           this.handleInputChange(item, value);
         }, 300)
       );
 
-      item.slider.addEventListener('input', (e) => {
+      item.slider.addEventListener("input", (e) => {
         this.handleSliderChange(item, parseFloat(e.target.value));
       });
 
-      item.input.addEventListener('focus', () => {
-        item.container.classList.add('input-focused');
+      item.input.addEventListener("focus", () => {
+        item.container.classList.add("input-focused");
       });
 
-      item.input.addEventListener('blur', () => {
-        item.container.classList.remove('input-focused');
+      item.input.addEventListener("blur", () => {
+        item.container.classList.remove("input-focused");
       });
     },
 
@@ -222,7 +234,7 @@
 
     handleSliderChange(item, sliderValue) {
       const mainValue = MainInputSync.getValue();
-      
+
       // Se não há valor principal, não permite slider
       if (mainValue <= 0) {
         item.slider.value = 0;
@@ -234,7 +246,7 @@
         this.updateBackgroundItemAcao(item);
         VisualFeedback.showAllocationWarning(
           item.container,
-          'Informe o valor do patrimônio primeiro'
+          "Informe o valor do patrimônio primeiro"
         );
         return;
       }
@@ -257,7 +269,8 @@
       }
 
       item.value = value;
-      item.percentage = value > 0 && mainValue > 0 ? (value / mainValue) * 100 : 0;
+      item.percentage =
+        value > 0 && mainValue > 0 ? (value / mainValue) * 100 : 0;
 
       item.input.value = Utils.formatCurrency(value);
       this.updatePercentageDisplay(item);
@@ -308,12 +321,13 @@
     },
 
     validateAllocation(item) {
-      const isOverAllocated = this.getTotalAllocated() > MainInputSync.getValue();
-      
+      const isOverAllocated =
+        this.getTotalAllocated() > MainInputSync.getValue();
+
       if (isOverAllocated) {
-        item.container.classList.add('over-allocated');
+        item.container.classList.add("over-allocated");
       } else {
-        item.container.classList.remove('over-allocated');
+        item.container.classList.remove("over-allocated");
       }
     },
 
@@ -340,7 +354,7 @@
       const remaining = mainValue - total;
 
       document.dispatchEvent(
-        new CustomEvent('allocationStatusChanged', {
+        new CustomEvent("allocationStatusChanged", {
           detail: {
             total,
             mainValue,
@@ -373,11 +387,11 @@
     },
 
     dispatchAllocationChange(item) {
-      const category = item.container.getAttribute('ativo-category');
-      const product = item.container.getAttribute('ativo-product');
+      const category = item.container.getAttribute("ativo-category");
+      const product = item.container.getAttribute("ativo-product");
 
       document.dispatchEvent(
-        new CustomEvent('allocationChanged', {
+        new CustomEvent("allocationChanged", {
           detail: {
             index: item.index,
             category,
@@ -395,10 +409,10 @@
 
   const VisualFeedback = {
     showAllocationWarning(item, message) {
-      let warning = item.container.querySelector('.allocation-warning');
+      let warning = item.container.querySelector(".allocation-warning");
       if (!warning) {
-        warning = document.createElement('div');
-        warning.className = 'allocation-warning';
+        warning = document.createElement("div");
+        warning.className = "allocation-warning";
         warning.style.cssText = `
           position: absolute;
           top: -30px;
@@ -414,16 +428,16 @@
           opacity: 0;
           transition: opacity 0.3s ease;
         `;
-        item.container.style.position = 'relative';
+        item.container.style.position = "relative";
         item.container.appendChild(warning);
       }
 
       warning.textContent = message;
-      warning.style.opacity = '1';
+      warning.style.opacity = "1";
 
       clearTimeout(warning.hideTimeout);
       warning.hideTimeout = setTimeout(() => {
-        warning.style.opacity = '0';
+        warning.style.opacity = "0";
       }, 3000);
     },
   };
@@ -438,8 +452,8 @@
         return;
       }
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
           this.initialize();
         });
       } else {
@@ -451,7 +465,7 @@
 
     initialize() {
       if (!window.currency) {
-        console.error('Currency.js is required for PatrimonySync');
+        console.error("Currency.js is required for PatrimonySync");
         return;
       }
 
@@ -475,7 +489,7 @@
         AllocationSync.checkTotalAllocationStatus();
 
         document.dispatchEvent(
-          new CustomEvent('patrimonySyncReady', {
+          new CustomEvent("patrimonySyncReady", {
             detail: {
               mainValue: this.getMainValue(),
               totalAllocated: this.getTotalAllocated(),
@@ -484,7 +498,7 @@
           })
         );
 
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           window.getAllocationSync = () => AllocationSync;
           window.patrimonySystemInstance = this;
         }
@@ -494,13 +508,13 @@
 
       this.updateWebflowPatrimonyDisplay();
 
-      document.addEventListener('patrimonyMainValueChanged', () => {
+      document.addEventListener("patrimonyMainValueChanged", () => {
         this.updateWebflowPatrimonyDisplay();
       });
-      document.addEventListener('allocationChanged', () => {
+      document.addEventListener("allocationChanged", () => {
         this.updateWebflowPatrimonyDisplay();
       });
-      document.addEventListener('allocationStatusChanged', () => {
+      document.addEventListener("allocationStatusChanged", () => {
         this.updateWebflowPatrimonyDisplay();
       });
     }
@@ -509,27 +523,37 @@
       const mainValue = this.getMainValue();
       const formattedValue = Utils.formatCurrency(mainValue);
 
-      const restanteEl = document.querySelector('.patrimonio_money_wrapper .patrimonio-restante');
+      const restanteEl = document.querySelector(
+        ".patrimonio_money_wrapper .patrimonio-restante"
+      );
       if (restanteEl) {
         restanteEl.textContent = Utils.formatCurrency(this.getRemainingValue());
       }
 
-      const totalEl = document.querySelector('.patrimonio_money_wrapper .patrimonio-total-value');
+      const totalEl = document.querySelector(
+        ".patrimonio_money_wrapper .patrimonio-total-value"
+      );
       if (totalEl) {
         totalEl.textContent = formattedValue;
       }
 
-      const headerTotalEl = document.querySelector('[data-patrimonio-total="true"]');
+      const headerTotalEl = document.querySelector(
+        '[data-patrimonio-total="true"]'
+      );
       if (headerTotalEl) {
         headerTotalEl.textContent = formattedValue;
       }
 
-      const allTotalElements = document.querySelectorAll('.patrimonio-total-value');
+      const allTotalElements = document.querySelectorAll(
+        ".patrimonio-total-value"
+      );
       allTotalElements.forEach((el) => {
         el.textContent = formattedValue;
       });
 
-      const porcentagemRestanteElements = document.querySelectorAll('.porcentagem-restante');
+      const porcentagemRestanteElements = document.querySelectorAll(
+        ".porcentagem-restante"
+      );
       if (porcentagemRestanteElements.length > 0) {
         const mainValue = this.getMainValue();
         const restante = this.getRemainingValue();
@@ -584,7 +608,7 @@
       AllocationSync.checkTotalAllocationStatus();
 
       document.dispatchEvent(
-        new CustomEvent('patrimonySyncReset', {
+        new CustomEvent("patrimonySyncReset", {
           detail: {
             timestamp: Date.now(),
           },
@@ -603,68 +627,17 @@
     }
   }
 
-  // Sistema de notificações visuais
-  const VisualFeedback = {
-    showAllocationWarning(container, message) {
-      let warning = container.querySelector('.allocation-warning');
-
-      if (!warning) {
-        warning = document.createElement('div');
-        warning.className = 'allocation-warning';
-        warning.style.cssText = `
-          color: #ef4444;
-          font-size: 0.875rem;
-          margin-top: 0.5rem;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          position: absolute;
-          background: white;
-          padding: 0.5rem;
-          border-radius: 0.25rem;
-          box-shadow: 0 2px 10px rgba(239, 68, 68, 0.2);
-          z-index: 10;
-          pointer-events: none;
-        `;
-        container.style.position = 'relative';
-        container.appendChild(warning);
-      }
-
-      warning.textContent = message;
-      warning.style.opacity = '1';
-
-      // Position the warning
-      const input = container.querySelector('input');
-      if (input) {
-        const rect = input.getBoundingClientRect();
-        warning.style.top = `${input.offsetTop + 60}px`;
-        warning.style.left = `${input.offsetLeft}px`;
-      }
-
-      // Auto hide
-      setTimeout(() => {
-        warning.style.opacity = '0';
-      }, 3000);
-
-      // Add limit reached styling to input
-      if (input) {
-        input.style.borderColor = '#ef4444';
-        setTimeout(() => {
-          input.style.borderColor = '';
-        }, 3000);
-      }
-    },
-  };
+  // ...existing code...
 
   // Cria instância global
   window.ReinoPatrimonySyncSystem = new PatrimonySyncSystem();
 
   // Auto-inicialização
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
       window.ReinoPatrimonySyncSystem.init();
     });
   } else {
     window.ReinoPatrimonySyncSystem.init();
   }
-
 })();

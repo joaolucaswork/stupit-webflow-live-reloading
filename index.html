@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple JS Live Reload</title>
+    <!-- Live reload script -->
+    <script>
+      const ws = new WebSocket("ws://localhost:3000");
+      ws.onmessage = (msg) => {
+        if (msg.data === "reload") location.reload();
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Simple JS Live Reload</h1>
+    <p>
+      Edite arquivos em <code>webflow-modules-txt/modules/</code> e veja o
+      resultado instantaneamente.
+    </p>
+    <!-- Exemplo de inclusão de script solto -->
+    <script src="/modules/asset-selection-filter.js"></script>
+  </body>
+</html>

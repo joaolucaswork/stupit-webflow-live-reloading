@@ -1,0 +1,19 @@
+{
+  "name": "stupit-webflow-live-reloading",
+  "version": "1.0.0",
+  "description": "Servidor simples para JS solto com live reload para integração Webflow.",
+  "main": "live-reload.js",
+  "scripts": {
+    "start": "node live-reload.js",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "express": "^4.18.2",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

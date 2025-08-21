@@ -1,0 +1,23 @@
+# Node modules
+node_modules/
+
+# Vite build output
+dist/
+
+# Local server logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# Misc
+npm-debug.log*
+pnpm-debug.log*
