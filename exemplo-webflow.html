@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo - Integração Webflow</title>
+    
+    <!-- SCRIPT PRINCIPAL - Cole isso no seu Webflow -->
+    <script src="http://localhost:3000/dist/index.js"></script>
+    
+    <!-- LIVE RELOAD (opcional) - Para desenvolvimento -->
+    <script>
+        const ws = new WebSocket('ws://localhost:3000');
+        ws.onmessage = (msg) => { 
+            if (msg.data === 'reload') {
+                console.log('🔄 Live reload ativado!');
+                location.reload(); 
+            }
+        };
+        ws.onopen = () => console.log('🔗 Conectado ao live reload');
+        ws.onerror = () => console.log('❌ Erro na conexão live reload');
+    </script>
+</head>
+<body>
+    <h1>Exemplo de Integração com Webflow</h1>
+    
+    <p>Este é um exemplo de como usar o sistema no Webflow:</p>
+    
+    <ol>
+        <li>Inicie o servidor: <code>npm start</code></li>
+        <li>Cole a tag script no &lt;head&gt; do seu projeto Webflow</li>
+        <li>Edite arquivos em <code>webflow-modules-txt/modules/</code></li>
+        <li>Veja as mudanças automaticamente!</li>
+    </ol>
+    
+    <div style="background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 8px;">
+        <h3>🔗 URL para usar no Webflow:</h3>
+        <code style="background: white; padding: 10px; display: block; border-radius: 4px;">
+            &lt;script src="http://localhost:3000/dist/index.js"&gt;&lt;/script&gt;
+        </code>
+    </div>
+    
+    <div style="background: #e8f5e8; padding: 20px; margin: 20px 0; border-radius: 8px;">
+        <h3>✅ Sistema funcionando!</h3>
+        <p>Se você consegue ver esta página, o servidor está rodando corretamente.</p>
+        <p>Agora você pode usar a URL acima no seu projeto Webflow.</p>
+    </div>
+    
+    <!-- Exemplo de elementos que os módulos podem usar -->
+    <div class="_2-section-calc-ativos">
+        <p>Exemplo de seção que os módulos podem manipular</p>
+    </div>
+    
+    <div class="_3-section-patrimonio-alocation">
+        <p>Outra seção de exemplo</p>
+    </div>
+</body>
+</html>

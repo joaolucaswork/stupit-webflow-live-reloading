@@ -42,26 +42,52 @@ simple-js-live-reload/
 
 ## Uso
 
-1. Coloque seus arquivos JS soltos em `modules/`.
-2. Edite `index.html` para referenciar os scripts desejados.
-3. Inicie o servidor:
+### Desenvolvimento Local
 
-   ```
+1. Coloque seus arquivos JS soltos em `webflow-modules-txt/modules/`.
+2. Inicie o servidor de desenvolvimento:
+
+   ```bash
+   npm start
+   # ou
    node live-reload.js
    ```
 
-4. Acesse `http://localhost:3000` no navegador.
-5. Ao editar qualquer arquivo JS em `modules/`, a página recarrega automaticamente.
+3. O servidor irá:
+   - Fazer build automático dos módulos
+   - Servir o arquivo buildado em `http://localhost:3000/dist/index.js`
+   - Recarregar automaticamente quando você editar arquivos
 
-## Integração com Webflow
+### Integração com Webflow
 
-- No seu projeto Webflow, adicione uma referência ao script hospedado localmente:
+**Para usar o código buildado no Webflow:**
 
-  ```html
-  <script src="http://localhost:3000/modules/seu-script1.js"></script>
-  ```
+1. No seu projeto Webflow, adicione no `<head>` da página:
 
-- Use o servidor local durante o desenvolvimento para testar alterações em tempo real.
+   ```html
+   <script src="http://localhost:3000/dist/index.js"></script>
+   ```
+
+2. **Para live reload no Webflow** (opcional), adicione também:
+
+   ```html
+   <script>
+     const ws = new WebSocket('ws://localhost:3000');
+     ws.onmessage = (msg) => {
+       if (msg.data === 'reload') location.reload();
+     };
+   </script>
+   ```
+
+3. Agora quando você editar qualquer arquivo em `webflow-modules-txt/modules/`, o Webflow irá recarregar automaticamente!
+
+### Build para Produção
+
+```bash
+npm run build
+```
+
+O arquivo final estará em `dist/index.js` pronto para ser hospedado.
 
 ## Personalização
 
